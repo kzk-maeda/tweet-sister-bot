@@ -15,8 +15,9 @@ class Twitter:
         self.customer_secret_key = credentials.get('customer_secret_key')
         self.access_token = credentials.get('access_token')
         self.access_token_secret = credentials.get('access_token_secret')
+        self._get_session()
 
-    def get_session(self):
+    def _get_session(self):
         self.twitter_session = OAuth1Session(
             self.customer_key,
             self.customer_secret_key,
@@ -25,33 +26,39 @@ class Twitter:
         )
         return self.twitter_session
 
-    def get_trends(self, session, id, is_exclude_hashtag=True):
+    def get_trends(self, id, is_exclude_hashtag=True):
         url = 'https://api.twitter.com/1.1/trends/place.json'
         params = {}
         params['id'] = id
         if is_exclude_hashtag:
             params['exclude'] = 'hashtags'
         try:
-            res = session.get(url, params=params)
+            res = self.twitter_session.get(url, params=params)
         except Exception as e:
             print(e)
 
         print(res.status_code)
         print(json.loads(res.text))
 
-    def post_tweet(self, session):
+        if res.status_code == 200:
+            trends = json.loads(res.text)[0].get('trends')
+            return trends
+        else:
+            return None
+
+    def post_tweet(self, word):
         url = "https://api.twitter.com/1.1/statuses/update.json"
-        tweet = "Test Tweet"
+        tweet = f'{word}の妹です。この度は兄がお騒がせしてすみません。'
         params = {"status" : tweet}
 
         try:
-            res = session.post(url, params = params)
+            res = self.twitter_session.post(url, params = params)
         except Exception as e:
             print(e)
         
-        if res.status_code == 200: #正常投稿出来た場合
+        if res.status_code == 200: 
             print("Success.")
-        else: #正常投稿出来なかった場合
+        else:
             print("Failed. : %d"% res.status_code)
             print(res.text)
 
@@ -60,15 +67,24 @@ class Judger():
     def __init__(self):
         pass
 
-    def judge_whether_tweet(self):
-        pass
+    def judge_whether_tweet(self, trend):
+        # return False
+        volume = trend.get('tweet_volume')
+        if type(volume) is int and volume > 100000:
+            return True
+        else:
+            return False
 
 
 def lambda_handler(events, contexts):
     twitter = Twitter()
-    session = twitter.get_session()
-    # twitter.get_trends(session, id=1118370)
-    twitter.post_tweet(session)
+    trends = twitter.get_trends(id=1118370)
+    judger = Judger()
+    for trend in trends:
+        should_tweet = judger.judge_whether_tweet(trend)
+        if should_tweet:
+            twitter.post_tweet(trend.get('name'))
+
 
 # for local debug
 if __name__ == "__main__":
