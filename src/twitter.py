@@ -8,13 +8,19 @@ import yaml
 from requests_oauthlib import OAuth1Session
 
 class Twitter:
-    def __init__(self):
-        with open('credentials.yml', 'r') as yml:
-            credentials = yaml.load(yml, Loader=yaml.FullLoader)
-        self.customer_key = credentials.get('customer_key')
-        self.customer_secret_key = credentials.get('customer_secret_key')
-        self.access_token = credentials.get('access_token')
-        self.access_token_secret = credentials.get('access_token_secret')
+    def __init__(self, env='local'):
+        if env == 'local':
+            with open('./credentials.yml', 'r') as yml:
+                credentials = yaml.load(yml, Loader=yaml.FullLoader)
+            self.customer_key = credentials.get('customer_key')
+            self.customer_secret_key = credentials.get('customer_secret_key')
+            self.access_token = credentials.get('access_token')
+            self.access_token_secret = credentials.get('access_token_secret')
+        elif env == 'aws':
+            # TODO: get keys from Environment encrypted by KMS
+            pass
+        else:
+            print('env is invalid')
         self._get_session()
 
     def _get_session(self):

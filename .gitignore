@@ -1,3 +1,5 @@
 /src/lib/*
 !/src/lib/.gitkeep
 /src/credentials.yml
+*/__pycache__/
+*/.pytest_cache
