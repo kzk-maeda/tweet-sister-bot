@@ -1,0 +1,3 @@
+/src/lib/*
+!/src/lib/.gitignore
+/src/credentials.yml
