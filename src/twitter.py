@@ -18,7 +18,10 @@ class Twitter:
             self.access_token_secret = credentials.get('access_token_secret')
         elif env == 'aws':
             # TODO: get keys from Environment encrypted by KMS
-            pass
+            self.customer_key = os.environ['CUSTOMER_KEY']
+            self.customer_secret_key = os.environ['CUSTOMER_SECRET_KEY']
+            self.access_token = os.environ['ACCESS_TOKEN']
+            self.access_token_secret = os.environ['ACCES_TOKEN_SECRET']
         else:
             print('env is invalid')
         self._get_session()

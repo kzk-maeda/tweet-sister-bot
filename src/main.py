@@ -12,7 +12,7 @@ from twitter import Twitter
 from judger import Judger
 
 
-def lambda_handler(events, contexts):
+def lambda_handler(event, context):
     twitter = Twitter()
     trends = twitter.get_trends(id=1118370)
     judger = Judger()
@@ -24,4 +24,4 @@ def lambda_handler(events, contexts):
 
 # for local debug
 if __name__ == "__main__":
-   lambda_handler(events=None, contexts=None) 
+   lambda_handler(event=None, context=None) 
