@@ -4,6 +4,7 @@
 /credentials/raw_credentials.yml
 /*/__pycache__/
 /*/.pytest_cache
+/.pytest_cache
 
 # Distribution / packaging
 .Python

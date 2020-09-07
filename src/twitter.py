@@ -61,6 +61,7 @@ class Twitter:
     def post_tweet(self, word):
         url = "https://api.twitter.com/1.1/statuses/update.json"
         tweet = f'{word}の妹です。この度は兄がお騒がせしてすみません。'
+        print(tweet)
         params = {"status" : tweet}
 
         try:

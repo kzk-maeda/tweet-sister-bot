@@ -9,7 +9,7 @@ from judger import Judger
 def test_tweet_volume_equals_threshold():
     trend = {
         'name': 'dummy',
-        'tweet_volume': 100000
+        'tweet_volume': 10000 
     }
     judger = Judger()
     assert not judger.judge_whether_tweet(trend)
@@ -17,7 +17,7 @@ def test_tweet_volume_equals_threshold():
 def test_tweet_volume_lager_than_threshold():
     trend = {
         'name' : 'dummy',
-        'tweet_volume' : 100001
+        'tweet_volume' : 10001
     }
     judger = Judger()
     assert judger.judge_whether_tweet(trend)

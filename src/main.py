@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 from datetime import datetime
 
 sys.path.append(os.path.join(os.path.dirname(__file__), './lib/'))
@@ -23,6 +24,7 @@ def lambda_handler(event, context):
         should_tweet = judger.judge_whether_tweet(trend)
         if should_tweet:
             twitter.post_tweet(trend.get('name'))
+            time.sleep(2)
 
 
 # for local debug
