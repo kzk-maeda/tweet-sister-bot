@@ -1,5 +1,5 @@
 ENV := aws
-PROFILE := kzk-serverless
+PROFILE := default
 WORKDIR := $(PWD)
 
 # install libs
