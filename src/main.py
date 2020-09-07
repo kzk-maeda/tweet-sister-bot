@@ -1,5 +1,6 @@
 import os
 import sys
+from datetime import datetime
 
 sys.path.append(os.path.join(os.path.dirname(__file__), './lib/'))
 sys.path.append(os.path.join(os.path.dirname(__file__), './'))
@@ -13,7 +14,9 @@ from judger import Judger
 
 
 def lambda_handler(event, context):
-    twitter = Twitter()
+    print(event)
+    env = event.get('env')
+    twitter = Twitter(env=env)
     trends = twitter.get_trends(id=1118370)
     judger = Judger()
     for trend in trends:
@@ -24,4 +27,5 @@ def lambda_handler(event, context):
 
 # for local debug
 if __name__ == "__main__":
-   lambda_handler(event=None, context=None) 
+    event = {"time": datetime.now().strftime('%Y-%m-%d'), "env": "local"}
+    lambda_handler(event=event, context=None) 

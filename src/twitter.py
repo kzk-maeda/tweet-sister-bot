@@ -1,5 +1,6 @@
 import os
 import sys
+import boto3
 
 sys.path.append(os.path.join(os.path.dirname(__file__), './lib/'))
 
@@ -17,11 +18,13 @@ class Twitter:
             self.access_token = credentials.get('access_token')
             self.access_token_secret = credentials.get('access_token_secret')
         elif env == 'aws':
-            # TODO: get keys from Environment encrypted by KMS
-            self.customer_key = os.environ['CUSTOMER_KEY']
-            self.customer_secret_key = os.environ['CUSTOMER_SECRET_KEY']
-            self.access_token = os.environ['ACCESS_TOKEN']
-            self.access_token_secret = os.environ['ACCES_TOKEN_SECRET']
+            # get keys from Environment encrypted by KMS
+            with open('src/encrypted_credentials.yml', 'r') as yml:
+                credentials = yaml.load(yml, Loader=yaml.FullLoader)
+            self.customer_key = self._decrypt_kms(credentials.get('encrypted_customer_key'))
+            self.customer_secret_key = self._decrypt_kms(credentials.get('encrypted_customer_secret_key'))
+            self.access_token = self._decrypt_kms(credentials.get('encrypted_access_token'))
+            self.access_token_secret = self._decrypt_kms(credentials.get('encrypted_access_token_secret'))
         else:
             print('env is invalid')
         self._get_session()
@@ -70,3 +73,16 @@ class Twitter:
         else:
             print("Failed. : %d"% res.status_code)
             print(res.text)
+
+    def _decrypt_kms(self, encrypted_text):
+        kms = boto3.client('kms')
+        key_alias = "twitter-key"
+        key_id = f"arn:aws:kms:ap-northeast-1:728291782722:alias/{key_alias}"
+        try:
+            response = kms.decrypt(
+                KeyId=key_id,
+                CiphertextBlob=encrypted_text
+            )
+            return response['Plaintext']
+        except Exception as e:
+            print(e)
