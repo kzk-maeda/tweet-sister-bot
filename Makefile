@@ -8,16 +8,17 @@ install:
 	cd ./src \
 	&& pip3 install -r requirements.txt -t ./lib \
 	&& cd $(WORKDIR) \
+	&& pip3 install -r ./src/requirements.txt \
 	&& npm install
 
 # deploy codes
 .PHONY: deploy
-deploy: install
+deploy: 
 	serverless deploy --aws-profile $(PROFILE) --verbose
 
 # test
 .PHONY: test
-test: install
+test: 
 	cd ./test/ \
 	&& pytest \
 	&& cd $(WORKDIR)
