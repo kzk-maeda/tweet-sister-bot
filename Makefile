@@ -8,7 +8,7 @@ install:
 	cd ./src \
 	&& pip3 install -r requirements.txt -t ./lib \
 	&& cd $(WORKDIR) \
-	&& pip3 install -r requirements.txt \
+	&& pip3 install -r ./src/requirements.txt \
 	&& npm install
 
 # deploy codes
