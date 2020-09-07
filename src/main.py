@@ -1,91 +1,33 @@
 import os
 import sys
+import time
+from datetime import datetime
 
 sys.path.append(os.path.join(os.path.dirname(__file__), './lib/'))
+sys.path.append(os.path.join(os.path.dirname(__file__), './'))
 
 import json
 import yaml
 from requests_oauthlib import OAuth1Session
 
-class Twitter:
-    def __init__(self):
-        with open('credentials.yml', 'r') as yml:
-            credentials = yaml.load(yml, Loader=yaml.FullLoader)
-        self.customer_key = credentials.get('customer_key')
-        self.customer_secret_key = credentials.get('customer_secret_key')
-        self.access_token = credentials.get('access_token')
-        self.access_token_secret = credentials.get('access_token_secret')
-        self._get_session()
-
-    def _get_session(self):
-        self.twitter_session = OAuth1Session(
-            self.customer_key,
-            self.customer_secret_key,
-            self.access_token,
-            self.access_token_secret
-        )
-        return self.twitter_session
-
-    def get_trends(self, id, is_exclude_hashtag=True):
-        url = 'https://api.twitter.com/1.1/trends/place.json'
-        params = {}
-        params['id'] = id
-        if is_exclude_hashtag:
-            params['exclude'] = 'hashtags'
-        try:
-            res = self.twitter_session.get(url, params=params)
-        except Exception as e:
-            print(e)
-
-        print(res.status_code)
-        print(json.loads(res.text))
-
-        if res.status_code == 200:
-            trends = json.loads(res.text)[0].get('trends')
-            return trends
-        else:
-            return None
-
-    def post_tweet(self, word):
-        url = "https://api.twitter.com/1.1/statuses/update.json"
-        tweet = f'{word}の妹です。この度は兄がお騒がせしてすみません。'
-        params = {"status" : tweet}
-
-        try:
-            res = self.twitter_session.post(url, params = params)
-        except Exception as e:
-            print(e)
-        
-        if res.status_code == 200: 
-            print("Success.")
-        else:
-            print("Failed. : %d"% res.status_code)
-            print(res.text)
+from twitter import Twitter
+from judger import Judger
 
 
-class Judger():
-    def __init__(self):
-        pass
-
-    def judge_whether_tweet(self, trend):
-        # return False
-        volume = trend.get('tweet_volume')
-        if type(volume) is int and volume > 100000:
-            return True
-        else:
-            return False
-
-
-def lambda_handler(events, contexts):
-    twitter = Twitter()
+def lambda_handler(event, context):
+    print(event)
+    env = event.get('env')
+    twitter = Twitter(env=env)
     trends = twitter.get_trends(id=1118370)
     judger = Judger()
     for trend in trends:
         should_tweet = judger.judge_whether_tweet(trend)
         if should_tweet:
             twitter.post_tweet(trend.get('name'))
+            time.sleep(2)
 
 
 # for local debug
 if __name__ == "__main__":
-   lambda_handler(events=None, contexts=None) 
+    event = {"time": datetime.now().strftime('%Y-%m-%d'), "env": "local"}
+    lambda_handler(event=event, context=None) 
