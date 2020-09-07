@@ -7,17 +7,18 @@ WORKDIR := $(PWD)
 install:
 	cd ./src \
 	&& pip3 install -r requirements.txt -t ./lib \
+	&& pip3 install -r requirements.txt \
 	&& cd $(WORKDIR) \
 	&& npm install
 
 # deploy codes
 .PHONY: deploy
-deploy: install
+deploy: 
 	serverless deploy --aws-profile $(PROFILE) --verbose
 
 # test
 .PHONY: test
-test: install
+test: 
 	cd ./test/ \
 	&& pytest \
 	&& cd $(WORKDIR)
