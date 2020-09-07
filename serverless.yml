@@ -41,9 +41,11 @@ custom:
 functions:
   execute:
     handler: src/main.lambda_handler
+    runtime: python3.8
+    timeout: 60
     events:
       - schedule: 
-          rate: rate(2 hours)
+          rate: rate(30 minutes)
           enabled: true
           inputTransformer:
             inputPathsMap:
