@@ -7,8 +7,8 @@ WORKDIR := $(PWD)
 install:
 	cd ./src \
 	&& pip3 install -r requirements.txt -t ./lib \
-	&& pip3 install -r requirements.txt \
 	&& cd $(WORKDIR) \
+	&& pip3 install -r requirements.txt \
 	&& npm install
 
 # deploy codes
