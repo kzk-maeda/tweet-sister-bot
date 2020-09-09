@@ -1,6 +1,7 @@
 import os
 import sys
 import boto3
+import random
 
 sys.path.append(os.path.join(os.path.dirname(__file__), './lib/'))
 
@@ -60,7 +61,7 @@ class Twitter:
 
     def post_tweet(self, word):
         url = "https://api.twitter.com/1.1/statuses/update.json"
-        tweet = f'{word}の妹です。この度は兄がお騒がせしてすみません。'
+        tweet = f'{word}の妹です。{self._second_word()}'
         print(tweet)
         params = {"status" : tweet}
 
@@ -87,3 +88,11 @@ class Twitter:
             return response['Plaintext']
         except Exception as e:
             print(e)
+
+    def _second_word(self):
+        word_list = [
+            'この度は兄がお騒がしてすみません。',
+            'この度は兄がお騒がせしてしまい申し訳ありません。',
+            '真実を全てお話しします。'
+        ]
+        return random.choice(word_list)
