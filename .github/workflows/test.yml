@@ -1,14 +1,14 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: test
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the development branch
 on:
   push:
-    branches: [ master ]
-#   pull_request:
-#     branches: [ master ]
+    branches: [ development ]
+  pull_request:
+    branches: [ development ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -46,17 +46,3 @@ jobs:
       # Runs a single command using the runners shell
       - name: Run unit test
         run: make test
-
-      # Set AWS default profile
-      - name: Set AWS Default profile
-        run: |
-          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws configure set default.region ap-northeast-1
-
-      # Runs a set of commands using the runners shell
-      - name: Run deploy
-        run: |
-          sudo npm install -g serverless
-          sls plugin install -n serverless-python-requirements
-          make deploy PROFILE=default 
