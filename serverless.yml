@@ -14,7 +14,7 @@ service: tweet-sister-bot
 provider:
   name: aws
   runtime: python3.8
-  stage: production
+  stage: ${opt:stage, self:custom.defaultStage}
   region: ap-northeast-1
 
   iamRoleStatements:
@@ -22,7 +22,16 @@ provider:
       Action:
         - "kms:*"
       Resource: "arn:aws:kms:*"
-
+    - Effect: Allow
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:*"
 
 package:
   individually: true
@@ -33,10 +42,26 @@ package:
 
 plugins:
   - serverless-python-requirements
+  - serverless-dynamodb-local
+  - serverless-offline
 
 custom:
+  defaultStage: development
   pythonRequirements:
     dockerizePip: true
+  dynamodb:
+    stages:
+      - development
+    start:
+      port: 8000
+      inMemory: true
+      migrate: true
+      seed: true
+    seed:
+      development:
+        sources:
+          - table: "Blacklists"
+            sources: [./migrations/sample_blacklists.json]
 
 functions:
   execute:
@@ -51,3 +76,27 @@ functions:
             inputPathsMap:
               eventTime: '$.time'
             inputTemplate: '{"time": <eventTime>, "env": "aws"}'
+
+resources:
+  Resources:
+    BlacklistTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        TableName: "Blacklists"
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: S
+          -
+            AttributeName: name
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+          -
+            AttributeName: name
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
