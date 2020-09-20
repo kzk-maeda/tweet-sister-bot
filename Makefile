@@ -9,7 +9,7 @@ install:
 	&& pip3 install -r requirements.txt -t ./lib \
 	&& cd $(WORKDIR) \
 	&& pip3 install -r ./src/requirements.txt \
-	&& npm install
+	&& npm ci
 
 # deploy codes
 .PHONY: deploy
