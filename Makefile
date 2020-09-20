@@ -14,7 +14,7 @@ install:
 # deploy codes
 .PHONY: deploy
 deploy: 
-	serverless deploy --aws-profile $(PROFILE) --verbose
+	serverless deploy --stage production --aws-profile $(PROFILE) --verbose
 
 # test
 .PHONY: test
