@@ -1,0 +1,28 @@
+{
+  "name": "tweet-sister-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "serverless-dynamodb-local": "^0.2.39",
+    "serverless-offline": "^6.7.0",
+    "serverless-python-requirements": "^5.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kzk-maeda/tweet-sister-bot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kzk-maeda/tweet-sister-bot/issues"
+  },
+  "homepage": "https://github.com/kzk-maeda/tweet-sister-bot#readme"
+}
