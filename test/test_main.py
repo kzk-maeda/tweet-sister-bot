@@ -4,6 +4,7 @@ import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), '../src'))
 
 from judger import Judger
+from dummy_blacklists import DummyBlacklists
 
 THRETHOLD = 30000
 
@@ -31,11 +32,17 @@ sample_trends = [
     {
         'name': 'trend_F',
         'tweet_volume': THRETHOLD + 1
+    },
+    {
+        'name': 'trend_blacklisted_A',
+        'tweet_volume': THRETHOLD + 1
     }
 ]
 
 def test_tweet_is_correct():
     judger = Judger()
+    # dummy blacklist class injection
+    judger.blacklists = DummyBlacklists()
     for trend in sample_trends:
         should_tweet = judger.judge_whether_tweet(trend)
 
@@ -50,4 +57,6 @@ def test_tweet_is_correct():
         elif trend.get('name') == 'trend_E':
             assert should_tweet is True
         elif trend.get('name') == 'trend_F':
+            assert should_tweet is False
+        elif trend.get('name') == 'trend_blacklisted_A':
             assert should_tweet is False
