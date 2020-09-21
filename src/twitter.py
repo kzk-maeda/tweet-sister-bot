@@ -12,7 +12,7 @@ from requests_oauthlib import OAuth1Session
 class Twitter:
     def __init__(self, env='local'):
         if env == 'local':
-            with open('./credentials.yml', 'r') as yml:
+            with open('./conf/credentials.yml', 'r') as yml:
                 credentials = yaml.load(yml, Loader=yaml.FullLoader)
             self.customer_key = credentials.get('customer_key')
             self.customer_secret_key = credentials.get('customer_secret_key')
@@ -20,7 +20,7 @@ class Twitter:
             self.access_token_secret = credentials.get('access_token_secret')
         elif env == 'aws':
             # get keys from Environment encrypted by KMS
-            with open('src/encrypted_credentials.yml', 'r') as yml:
+            with open('src/conf/encrypted_credentials.yml', 'r') as yml:
                 credentials = yaml.load(yml, Loader=yaml.FullLoader)
             self.customer_key = self._decrypt_kms(credentials.get('encrypted_customer_key'))
             self.customer_secret_key = self._decrypt_kms(credentials.get('encrypted_customer_secret_key'))

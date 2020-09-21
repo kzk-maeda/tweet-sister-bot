@@ -59,7 +59,7 @@ if __name__ == "__main__":
         'encrypted_access_token_secret': encrypted_ats
     }
 
-    with open('../src/encrypted_credentials.yml', 'w') as yml:
+    with open('../src/conf/encrypted_credentials.yml', 'w') as yml:
         yaml.dump(encrypted_credentials, yml, encoding='utf-8')
 
 
