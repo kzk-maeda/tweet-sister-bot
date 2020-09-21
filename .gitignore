@@ -1,6 +1,6 @@
 /src/lib/*
 !/src/lib/.gitkeep
-/src/credentials.yml
+/src/conf/credentials.yml
 /credentials/raw_credentials.yml
 /*/__pycache__/
 /*/.pytest_cache
