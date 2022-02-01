@@ -42,7 +42,6 @@ jobs:
           aws-region: ap-northeast-1
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/iamrole-aws-action
           role-session-name: MySession
-        run: aws sts get-caller-identity 
           
       # Runs a single command using the runners shell
       - name: Run unit test
