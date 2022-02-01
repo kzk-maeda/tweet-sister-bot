@@ -36,13 +36,6 @@ jobs:
           pip install boto3
           make install
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-northeast-1
-
       # Runs a single command using the runners shell
       - name: Run unit test
         run: make test
